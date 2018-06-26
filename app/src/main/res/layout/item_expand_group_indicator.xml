@@ -1,0 +1,28 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="45dp"
+              android:background="#ffffff"
+              android:orientation="horizontal"
+              android:padding="8dp">
+
+    <ImageView
+        android:id="@+id/iv_indicator"
+        android:layout_width="10dp"
+        android:layout_height="10dp"
+        android:layout_gravity="center_vertical"
+        android:layout_marginLeft="8dp"
+        android:background="@drawable/ic_expand_more"
+        />
+
+    <TextView
+        android:id="@+id/label_group_indicator"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_weight="1"
+        android:paddingLeft="10dp"
+        android:textColor="#000000"
+        android:textSize="18sp"
+        tools:text="测试数据"/>
+</LinearLayout>

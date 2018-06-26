@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#f9f9fb"
+    tools:context=".UserActivity">
+
+    <in.srain.cube.views.ptr.PtrFrameLayout
+        android:id="@+id/user_refresh"
+        xmlns:cube_ptr="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        cube_ptr:ptr_resistance="1.7"
+        cube_ptr:ptr_ratio_of_header_height_to_refresh="1.2"
+        cube_ptr:ptr_duration_to_close="300"
+        cube_ptr:ptr_duration_to_close_header="2000"
+        cube_ptr:ptr_keep_header_when_refresh="true"
+        cube_ptr:ptr_pull_to_fresh="false">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+            <TextView
+                android:id="@+id/new_friend"
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:textSize="18sp"
+                android:background="#ffffff"
+                android:gravity="center_vertical"
+                android:paddingLeft="15dp"
+                android:textColor="#000000"
+                android:text="新朋友"/>
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="0.8dp"
+                android:layout_marginBottom="12dp"
+                android:background="#cecece"/>
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="0.8dp"
+                android:background="#cecece"/>
+
+            <ExpandableListView
+                android:id="@+id/expand_list"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+        </LinearLayout>
+    </in.srain.cube.views.ptr.PtrFrameLayout>
+
+</LinearLayout>

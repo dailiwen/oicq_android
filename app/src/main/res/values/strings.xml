@@ -1,0 +1,21 @@
+<resources>
+    <string name="app_name">oicq_android</string>
+
+    <!--共用-->
+    <string name="register_btn">注册</string>
+    <string name="login_password">密码</string>
+
+    <!--登录界面-->
+    <string name="login_name">用户名</string>
+    <string name="login_btn">登录</string>
+
+    <!--注册界面-->
+    <string name="register_name">用户名</string>
+    <string name="confirm_password">确认密码</string>
+    <string name="back_btn">返回</string>
+
+    <!--聊天界面-->
+    <string name="receive_box">接收消息</string>
+    <string name="send_box">发送消息</string>
+    <string name="send_btn">发送</string>
+</resources>

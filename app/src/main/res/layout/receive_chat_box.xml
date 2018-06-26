@@ -1,0 +1,37 @@
+<com.zhy.android.percent.support.PercentFrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_vertical"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_widthPercent="75%"
+        android:gravity="center_vertical">
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:background="@drawable/receive_chat_box">
+            <TextView
+                android:id="@+id/receive_chat"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:textSize="18sp"
+                android:textColor="#e9bf85"
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp"
+                android:paddingLeft="12dp"
+                android:paddingRight="12dp"
+                android:text="@string/receive_box"/>
+        </LinearLayout>
+    </LinearLayout>
+
+
+</com.zhy.android.percent.support.PercentFrameLayout>
