@@ -18,12 +18,16 @@ import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.dai.oicq_android.adapter.TalkAdapter;
@@ -49,6 +53,15 @@ import butterknife.ButterKnife;
 import static com.example.dai.oicq_android.Constant.ACCOUNT;
 
 public class TalkActivity extends BaseActivity {
+    /**
+     * 退出登录按钮
+     */
+    @BindView(R.id.back_btn)
+    LinearLayout backBtn;
+
+    @BindView(R.id.friend_name)
+    TextView friendName;
+
     @BindView(R.id.recycler_talk)
     RecyclerView recyclerTalk;
 
@@ -60,10 +73,6 @@ public class TalkActivity extends BaseActivity {
 
     private TalkAdapter talkAdapter;
 
-    private NotificationManager nm;
-    private Notification n;
-    private int messageNotificationID = 0;
-
     private List<Talk> massage = new ArrayList<>();
 
     private Socket socket;
@@ -73,6 +82,7 @@ public class TalkActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        hideTitle(true);
         setContentView(R.layout.activity_talk);
         ButterKnife.bind(this);
         initData();
@@ -88,6 +98,8 @@ public class TalkActivity extends BaseActivity {
 
     @Override
     public void initView() {
+        friendName.setText(getIntent().getExtras().getString("name"));
+
         //RecyclerView初始化
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerTalk.setLayoutManager(layoutManager);
@@ -105,7 +117,7 @@ public class TalkActivity extends BaseActivity {
         sendEdit.addTextChangedListener(new TextWatcher() {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (count == 0) {
+                if (sendEdit.getText().length() == 0) {
                     sendBtn.setEnabled(Boolean.FALSE);
                     sendBtn.setBackgroundResource(R.drawable.send_btn);
 
@@ -134,6 +146,22 @@ public class TalkActivity extends BaseActivity {
             }
         });
 
+        backBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+
+        sendEdit.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_SEND) {
+                    new Thread(sendMassageRun).start();
+                }
+                return false;
+            }
+        });
 
     }
 
@@ -145,7 +173,7 @@ public class TalkActivity extends BaseActivity {
                 if (appUtil.getSocket() == null) {
                     appUtil.init();
                 }
-                Socket socket = appUtil.getSocket();
+                socket = appUtil.getSocket();
                 bufferedReader = appUtil.getBufferedReader();
                 printWriter = appUtil.getPrintWriter();
             } catch (IOException e1) {
@@ -182,7 +210,7 @@ public class TalkActivity extends BaseActivity {
                 if (appUtil.getSocket() == null) {
                     appUtil.init();
                 }
-                Socket socket = appUtil.getSocket();
+                socket = appUtil.getSocket();
                 bufferedReader = appUtil.getBufferedReader();
                 printWriter = appUtil.getPrintWriter();
             } catch (IOException e1) {

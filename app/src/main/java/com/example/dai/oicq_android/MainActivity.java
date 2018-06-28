@@ -3,9 +3,12 @@ package com.example.dai.oicq_android;
 import android.os.Bundle;
 import android.os.Looper;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.dai.oicq_android.entity.Account;
@@ -73,6 +76,27 @@ public class MainActivity extends BaseActivity {
                 startActivity(RegisterActivity.class);
             }
         });
+
+        loginName.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_NEXT) {
+                    loginName.clearFocus();//失去焦点
+                    password.requestFocus();//获取焦点
+                }
+                return false;
+            }
+        });
+
+        password.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_DONE) {
+                    new Thread(loginRun).start();
+                }
+                return false;
+            }
+        });
     }
 
     Runnable loginRun = new Runnable(){
@@ -83,7 +107,7 @@ public class MainActivity extends BaseActivity {
                 if (appUtil.getSocket() == null) {
                     appUtil.init();
                 }
-                Socket socket = appUtil.getSocket();
+                socket = appUtil.getSocket();
                 bufferedReader = appUtil.getBufferedReader();
                 printWriter = appUtil.getPrintWriter();
             } catch (IOException e1) {
@@ -115,7 +139,7 @@ public class MainActivity extends BaseActivity {
                     finish();
                 } else {
                     Looper.prepare();
-                    Toast.makeText(getApplicationContext(), "用户或密码输入错误", Toast.LENGTH_SHORT).show();
+                    showToast("用户或密码输入错误");
                     Looper.loop();
 
                 }

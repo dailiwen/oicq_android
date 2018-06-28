@@ -5,42 +5,55 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:gravity="center"
     tools:context=".RegisterActivity">
 
     <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_marginBottom="20dp">
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/login_name"/>
         <EditText
             android:id="@+id/register_name"
-            android:layout_width="wrap_content"
+            android:gravity="center"
+            android:layout_width="200dp"
+            android:imeOptions="actionNext"
             android:layout_height="wrap_content" />
     </LinearLayout>
     <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_marginBottom="20dp">
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/login_password"/>
         <EditText
             android:id="@+id/password"
-            android:layout_width="wrap_content"
+            android:gravity="center"
+            android:layout_width="200dp"
+            android:imeOptions="actionNext"
             android:layout_height="wrap_content" />
     </LinearLayout>
     <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_marginBottom="20dp">
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/confirm_password"/>
         <EditText
-            android:id="@+id/onfirm_password"
-            android:layout_width="wrap_content"
+            android:id="@+id/confirm_password"
+            android:gravity="center"
+            android:layout_width="200dp"
+            android:imeOptions="actionDone"
             android:layout_height="wrap_content" />
     </LinearLayout>
     <LinearLayout
@@ -50,7 +63,9 @@
             android:id="@+id/register_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/register_btn"/>
+            android:layout_marginRight="40dp"
+            android:text="@string/register_btn"
+            android:layout_marginEnd="40dp" />
         <Button
             android:id="@+id/back_btn"
             android:layout_width="wrap_content"

@@ -1,13 +1,19 @@
 package com.example.dai.oicq_android;
 
+import android.os.Handler;
+import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.dai.oicq_android.adapter.IndicatorExpandableListAdapter;
 import com.example.dai.oicq_android.entity.Account;
 import com.example.dai.oicq_android.util.ApplicationUtil;
 import com.example.dai.oicq_android.util.JacksonUtil;
@@ -32,6 +38,10 @@ public class RegisterActivity extends BaseActivity {
     EditText registerName;
     @BindView(R.id.password)
     EditText password;
+    @BindView(R.id.confirm_password)
+    EditText confirmPassword;
+    @BindView(R.id.back_btn)
+    Button backBtn;
 
     private Socket socket;
     private BufferedReader bufferedReader;
@@ -60,7 +70,58 @@ public class RegisterActivity extends BaseActivity {
         registerBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new Thread(registerRun).start();
+                if ("".equals(registerName.getText()) || "".equals(confirmPassword.getText()) || "".equals(password.getText())) {
+                    showToast("请将信息填完整");
+                } else if (confirmPassword.getText().equals(password.getText())) {
+                    showToast("两次输入密码不一致");
+                } else {
+                    new Thread(registerRun).start();
+                }
+            }
+        });
+
+        backBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+
+        registerName.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_NEXT) {
+                    registerName.clearFocus();//失去焦点
+                    password.requestFocus();//获取焦点
+                }
+                return false;
+            }
+        });
+
+        password.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_NEXT) {
+                    password.clearFocus();//失去焦点
+                    confirmPassword.requestFocus();//获取焦点
+                }
+                return false;
+            }
+        });
+
+        confirmPassword.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_DONE) {
+                    if ("".equals(registerName.getText()) || "".equals(confirmPassword.getText()) || "".equals(password.getText())) {
+                        showToast("请将信息填完整");
+                    } else if (confirmPassword.getText().equals(password.getText())) {
+                        showToast("两次输入密码不一致");
+                    } else {
+                        new Thread(registerRun).start();
+                    }
+                }
+                return false;
             }
         });
     }
@@ -73,7 +134,7 @@ public class RegisterActivity extends BaseActivity {
                 if (appUtil.getSocket() == null) {
                     appUtil.init();
                 }
-                Socket socket = appUtil.getSocket();
+                socket = appUtil.getSocket();
                 bufferedReader = appUtil.getBufferedReader();
                 printWriter = appUtil.getPrintWriter();
             } catch (IOException e1) {
@@ -97,12 +158,13 @@ public class RegisterActivity extends BaseActivity {
                 String receive = bufferedReader.readLine();
 
                 if((Integer) JacksonUtil.jsonToMap(receive).get("type") == 0) {
-                    //Intent intent = new Intent();
-                    //intent.setClass(LoginActivity.this, MainActivity.class);
-                    startActivity(MainActivity.class);
-                    finish();
+                    Message msg = new Message();
+                    msg.what = 1;
+                    mHandler.sendMessage(msg);
                 } else {
-                    Toast.makeText(getApplicationContext(), "该用户名被占用", Toast.LENGTH_SHORT).show();
+                    Message msg = new Message();
+                    msg.what = 2;
+                    mHandler.sendMessage(msg);
                 }
             } catch (UnknownHostException e) {
                 e.printStackTrace();
@@ -111,5 +173,21 @@ public class RegisterActivity extends BaseActivity {
             }
 
         }
+    };
+
+    private Handler mHandler = new Handler(){
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case 1: {
+                    showToast("注册成功");
+                    finish();
+                    break;
+                }
+                case 2: {
+                    showToast("该用户名已被占用");
+                    break;
+                }
+            }
+        };
     };
 }

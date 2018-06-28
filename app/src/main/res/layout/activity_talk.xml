@@ -8,7 +8,41 @@
     android:background="#f1f2f7"
     android:fitsSystemWindows="true"
     tools:context=".TalkActivity">
-
+    <LinearLayout
+        android:id="@+id/nomal_bar"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@color/colorPrimary">
+        <LinearLayout
+            android:id="@+id/back_btn"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:paddingLeft="12dp"
+            android:background="@color/colorPrimary">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="返回"
+                android:textColor="#ffffff"
+                android:textSize="16sp"/>
+        </LinearLayout>
+        <TextView
+            android:id="@+id/friend_name"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="5"
+            android:gravity="center"
+            android:text="dai"
+            android:textSize="20sp"
+            android:textColor="#ffffff"/>
+        <ImageView
+            android:id="@+id/search_btn"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"/>
+    </LinearLayout>
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler_talk"
         android:layout_width="match_parent"
@@ -32,6 +66,7 @@
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
             android:textSize="15sp"
+            android:imeOptions="actionSend"
             android:textCursorDrawable="@drawable/cursor_color"
             android:background="@drawable/send_edit"
             android:paddingStart="10dp"

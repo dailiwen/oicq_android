@@ -8,6 +8,41 @@
     android:background="#f9f9fb"
     tools:context=".UserActivity">
 
+    <LinearLayout
+        android:id="@+id/nomal_bar"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@color/colorPrimary">
+        <LinearLayout
+            android:id="@+id/back_btn"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="2"
+            android:gravity="center"
+            android:paddingLeft="12dp"
+            android:background="@color/colorPrimary">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="退出登录"
+                android:textColor="#ffffff"
+                android:textSize="16sp"/>
+        </LinearLayout>
+        <TextView
+            android:id="@+id/unbind_title"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="5"
+            android:gravity="center"
+            android:text="好友目录"
+            android:textSize="20sp"
+            android:textColor="#ffffff"/>
+        <ImageView
+            android:id="@+id/search_btn"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"/>
+    </LinearLayout>
     <in.srain.cube.views.ptr.PtrFrameLayout
         android:id="@+id/user_refresh"
         xmlns:cube_ptr="http://schemas.android.com/apk/res-auto"

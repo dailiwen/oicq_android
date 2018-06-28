@@ -3,7 +3,7 @@
 
     <!--共用-->
     <string name="register_btn">注册</string>
-    <string name="login_password">密码</string>
+    <string name="login_password">密 码</string>
 
     <!--登录界面-->
     <string name="login_name">用户名</string>

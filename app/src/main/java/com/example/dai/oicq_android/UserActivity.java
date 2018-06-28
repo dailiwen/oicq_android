@@ -1,10 +1,15 @@
 package com.example.dai.oicq_android;
 
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ExpandableListView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -36,6 +41,11 @@ import static com.example.dai.oicq_android.Constant.ACCOUNT;
 
 public class UserActivity extends BaseActivity {
     /**
+     * 退出登录按钮
+     */
+    @BindView(R.id.back_btn)
+    LinearLayout backBtn;
+    /**
      * 好友下拉单
      */
     @BindView(R.id.expand_list)
@@ -64,6 +74,7 @@ public class UserActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        hideTitle(true);
         setContentView(R.layout.activity_user);
         ButterKnife.bind(this);
         initData();
@@ -99,11 +110,6 @@ public class UserActivity extends BaseActivity {
     protected void onResume() {
         super.onResume();
         new Thread(friendListRun).start();
-        adapter = new IndicatorExpandableListAdapter(fatherList, onlineList, offlineList);
-        //设置ExpandableListView的adapter
-        expandableListView.setAdapter(adapter);
-        // 清除默认的 Indicator
-        expandableListView.setGroupIndicator(null);
     }
 
     @Override
@@ -151,11 +157,6 @@ public class UserActivity extends BaseActivity {
                     @Override
                     public void run() {
                         new Thread(friendListRun).start();
-                        adapter = new IndicatorExpandableListAdapter(fatherList, onlineList, offlineList);
-                        //设置ExpandableListView的adapter
-                        expandableListView.setAdapter(adapter);
-                        // 清除默认的 Indicator
-                        expandableListView.setGroupIndicator(null);
                     }
                 }, 0);
             }
@@ -164,6 +165,13 @@ public class UserActivity extends BaseActivity {
             public boolean checkCanDoRefresh(PtrFrameLayout frame, View content, View header) {
                 // 默认实现，根据实际情况做改动
                 return PtrDefaultHandler.checkContentCanBePulledDown(frame, content, header);
+            }
+        });
+
+        backBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new Thread(logOutRun).start();
             }
         });
     }
@@ -179,7 +187,7 @@ public class UserActivity extends BaseActivity {
                 if (appUtil.getSocket() == null) {
                     appUtil.init();
                 }
-                Socket socket = appUtil.getSocket();
+                socket = appUtil.getSocket();
                 bufferedReader = appUtil.getBufferedReader();
                 printWriter = appUtil.getPrintWriter();
             } catch (IOException e1) {
@@ -202,6 +210,9 @@ public class UserActivity extends BaseActivity {
                 String receive = bufferedReader.readLine();
 
                 if((Integer) JacksonUtil.jsonToMap(receive).get("type") == 0) {
+                    offlineList.clear();
+                    onlineList.clear();
+                    onlineidList.clear();
                     List<Map<String, Object>> maps = (List<Map<String, Object>>) JacksonUtil.jsonToMap(receive).get("result");
                     for (int i = 0; i < maps.size(); i++) {
                         //未上线好友
@@ -212,8 +223,13 @@ public class UserActivity extends BaseActivity {
                             onlineidList.add((String) maps.get(i).get("id"));
                         }
                     }
+                    Message msg = new Message();
+                    msg.what = 1;
+                    mHandler.sendMessage(msg);
                 } else {
+//                    Looper.prepare();
 //                    showToast("123");
+//                    Looper.loop();
                 }
             } catch (UnknownHostException e) {
                 e.printStackTrace();
@@ -224,5 +240,64 @@ public class UserActivity extends BaseActivity {
         }
     };
 
+    Runnable logOutRun = new Runnable(){
+        @Override
+        public void run() {
+            offlineList.clear();
+            onlineList.clear();
+            onlineidList.clear();
 
+            Map<String, String> result = new HashMap<>();
+            result.put("type", "logout");
+            result.put("id", ACCOUNT.getId());
+
+            try {
+                //发送数据
+                String str = JacksonUtil.objectToJson(result);
+                printWriter.println(str);
+                printWriter.flush();
+                Log.d("dailiwen", "result ===> " + str);
+
+                String receive = bufferedReader.readLine();
+
+                if((Integer) JacksonUtil.jsonToMap(receive).get("type") == 0) {
+                    Message msg = new Message();
+                    msg.what = 2;
+                    mHandler.sendMessage(msg);
+                }
+            } catch (UnknownHostException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+        }
+    };
+
+    private Handler mHandler = new Handler(){
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case 1: {
+                    userRefresh.refreshComplete();
+                    adapter = new IndicatorExpandableListAdapter(fatherList, onlineList, offlineList);
+                    //设置ExpandableListView的adapter
+                    expandableListView.setAdapter(adapter);
+                    // 清除默认的 Indicator
+                    expandableListView.setGroupIndicator(null);
+                    break;
+                }
+                case 2: {
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    showToast("退出登录");
+                    startActivity(MainActivity.class);
+                    finish();
+                    break;
+                }
+            }
+        };
+    };
 }
