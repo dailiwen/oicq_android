@@ -67,6 +67,7 @@
             android:paddingRight="10dp"
             android:textSize="15sp"
             android:imeOptions="actionSend"
+            android:singleLine="true"
             android:textCursorDrawable="@drawable/cursor_color"
             android:background="@drawable/send_edit"
             android:paddingStart="10dp"
